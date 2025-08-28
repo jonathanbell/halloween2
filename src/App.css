@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  background: url('/4140519.jpg') center center / cover no-repeat;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.app::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3); /* Dark overlay to improve text readability */
+  pointer-events: none;
+}
+
+.main-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.instructions {
+  position: fixed;
+  bottom: 1vh;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #666;
+  font-size: 1.5vh;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.5vh 2vh;
+  border-radius: 0.5vh;
+  z-index: 20;
+}
+
+/* Add fog effect */
+.app::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><filter id="fog"><feTurbulence baseFrequency="0.01" numOctaves="2" /><feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/></filter><rect width="100%" height="100%" filter="url(%23fog)" /></svg>');
+  opacity: 0.3;
+  pointer-events: none;
+  animation: fogMove 30s ease-in-out infinite;
+}
+
+@keyframes fogMove {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  33% {
+    transform: translateX(-5%) translateY(5%);
+  }
+  66% {
+    transform: translateX(5%) translateY(-5%);
+  }
+}
+
+/* Spider web decorations */
+.spider-web {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.spider-web.top-left {
+  top: 0;
+  left: 0;
+  transform: rotate(0deg);
+}
+
+.spider-web.top-right {
+  top: 0;
+  right: 0;
+  transform: rotate(90deg);
+}
+
+/* Fullscreen optimizations */
+:-webkit-full-screen .instructions {
+  display: none;
+}
+
+:-moz-full-screen .instructions {
+  display: none;
+}
+
+:fullscreen .instructions {
+  display: none;
+}

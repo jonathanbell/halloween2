@@ -1,0 +1,140 @@
+.candy-progress-container {
+  position: relative;
+  width: 80%;
+  max-width: 800px;
+  margin: 3vh auto;
+  z-index: 10;
+}
+
+.candy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1vh;
+  font-size: 3vh;
+  color: #ffd700;
+  text-shadow: 
+    2px 2px 0px #000,
+    -1px -1px 0px #000;
+  font-weight: bold;
+}
+
+.candy-title {
+  font-family: 'Creepster', cursive;
+}
+
+.candy-count {
+  font-family: 'Digital-7', monospace;
+  color: #ff6b35;
+}
+
+.progress-bar-outer {
+  width: 100%;
+  height: 6vh;
+  background: #1a1a1a;
+  border: 3px solid #8b4513;
+  border-radius: 2vh;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 
+    inset 0 0 20px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(139, 69, 19, 0.5);
+}
+
+.progress-bar-inner {
+  height: 100%;
+  transition: width 0.5s ease, background 0.5s ease;
+  position: relative;
+  border-radius: 2vh 0 0 2vh;
+}
+
+.progress-bar-inner.green {
+  background: linear-gradient(90deg, #2ecc71, #27ae60);
+}
+
+.progress-bar-inner.yellow {
+  background: linear-gradient(90deg, #f39c12, #e67e22);
+}
+
+.progress-bar-inner.red {
+  background: linear-gradient(90deg, #e74c3c, #c0392b);
+}
+
+.progress-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.progress-bar-inner.critical {
+  animation: pulse 0.5s infinite alternate;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+
+.empty-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.5vh;
+  font-weight: bold;
+  color: #ff0000;
+  text-shadow: 
+    0 0 10px rgba(255, 0, 0, 0.8),
+    2px 2px 0px #000;
+  animation: flash 0.3s infinite alternate;
+  font-family: 'Creepster', cursive;
+}
+
+@keyframes flash {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.3;
+  }
+}
+
+.candy-icons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1vh;
+  font-size: 2.5vh;
+}
+
+.candy-icon {
+  transition: all 0.3s;
+  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+}
+
+.candy-icon.depleted {
+  opacity: 0.2;
+  filter: grayscale(100%);
+  transform: scale(0.8);
+}
