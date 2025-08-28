@@ -6,9 +6,10 @@ import './ZombieHorde.css';
 interface ZombieHordeProps {
   triggerAnimation: boolean;
   currentCount: number;
+  candyRemaining?: number;
 }
 
-export const ZombieHorde: React.FC<ZombieHordeProps> = ({ triggerAnimation, currentCount }) => {
+export const ZombieHorde: React.FC<ZombieHordeProps> = ({ triggerAnimation, currentCount, candyRemaining = 100 }) => {
   const [zombies, setZombies] = useState<ZombieInstance[]>([]);
 
   useEffect(() => {
@@ -24,10 +25,10 @@ export const ZombieHorde: React.FC<ZombieHordeProps> = ({ triggerAnimation, curr
           // Keep existing zombie with its current position
           newZombies.push(existingZombie);
         } else {
-          // Create new zombie appearing from left side
+          // Create new zombie appearing just inside the left edge of screen
           newZombies.push({
             id: `zombie-${i}`,
-            position: -20 - Math.random() * 10, // Start from left side
+            position: 5 + Math.random() * 5, // Start just inside view from left
             speed: 0.06 + Math.random() * 0.03, // Good shambling pace
             scale: 0.8 + Math.random() * 0.4, // Varied sizes
             yOffset: Math.random() * 10 - 5, // Slight vertical variation
@@ -40,6 +41,9 @@ export const ZombieHorde: React.FC<ZombieHordeProps> = ({ triggerAnimation, curr
   }, [currentCount]);
 
   useEffect(() => {
+    // Don't animate if out of candy
+    if (candyRemaining === 0) return;
+
     let animationFrameId: number;
     let lastTimestamp: number | null = null;
 
@@ -69,7 +73,7 @@ export const ZombieHorde: React.FC<ZombieHordeProps> = ({ triggerAnimation, curr
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [candyRemaining]);
 
   return (
     <div className="zombie-horde-container">
@@ -77,6 +81,7 @@ export const ZombieHorde: React.FC<ZombieHordeProps> = ({ triggerAnimation, curr
         <ZombieWalker
           key={zombie.id}
           zombie={zombie}
+          isOutOfCandy={candyRemaining === 0}
         />
       ))}
 
@@ -90,17 +95,50 @@ export const ZombieHorde: React.FC<ZombieHordeProps> = ({ triggerAnimation, curr
 
 interface ZombieWalkerProps {
   zombie: ZombieInstance;
+  isOutOfCandy: boolean;
 }
 
-const ZombieWalker: React.FC<ZombieWalkerProps> = ({ zombie }) => {
-  const { RiveComponent } = useRive({
+const ZombieWalker: React.FC<ZombieWalkerProps> = ({ zombie, isOutOfCandy }) => {
+  const { RiveComponent, rive } = useRive({
     src: '/rive/zombie.riv',
     stateMachines: 'State Machine 1',
     autoplay: true,
   });
 
-  // Fade out when approaching right edge, fade in when starting from left
-  const opacity = zombie.position > 100 ? 0 : zombie.position < -15 ? 0 : 1;
+  // Trigger "In" animation when zombie first appears
+  useEffect(() => {
+    if (rive) {
+      // Small delay to ensure zombie is rendered and visible first
+      setTimeout(() => {
+        const inputs = rive.stateMachineInputs('State Machine 1');
+        const inInput = inputs?.find(input => input.name === 'In');
+        
+        if (inInput && 'fire' in inInput) {
+          // Fire the "In" trigger after zombie is positioned
+          inInput.fire();
+        }
+      }, 100);
+    }
+  }, [rive]);
+
+  // Trigger "Hit" animation when out of candy
+  useEffect(() => {
+    if (rive && isOutOfCandy) {
+      // Small delay to ensure Rive is fully loaded
+      setTimeout(() => {
+        const inputs = rive.stateMachineInputs('State Machine 1');
+        const hitInput = inputs?.find(input => input.name === 'Hit');
+        
+        if (hitInput && 'fire' in hitInput) {
+          // Fire the "Hit" trigger when candy runs out
+          hitInput.fire();
+        }
+      }, 200);
+    }
+  }, [rive, isOutOfCandy]);
+
+  // Hide zombie when it goes off-screen (but keep visible area wider for smoother entry)
+  const isVisible = zombie.position > -5 && zombie.position < 105;
 
   return (
     <div
@@ -108,8 +146,7 @@ const ZombieWalker: React.FC<ZombieWalkerProps> = ({ zombie }) => {
       style={{
         transform: `translateX(${zombie.position}vw) translateY(${zombie.yOffset}vh) scale(${zombie.scale})`,
         zIndex: Math.floor(zombie.scale * 10),
-        opacity,
-        transition: 'opacity 0.3s ease',
+        display: isVisible ? 'block' : 'none',
       }}
     >
       <RiveComponent />

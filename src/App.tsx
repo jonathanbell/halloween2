@@ -60,6 +60,7 @@ function App() {
         <ZombieHorde 
           triggerAnimation={counter.isAnimating} 
           currentCount={counter.currentCount}
+          candyRemaining={counter.candyRemaining}
         />
       </div>
 
