@@ -67,3 +67,8 @@ export default tseslint.config([
   },
 ])
 ```
+
+## Ideas
+
+- <https://codepen.io/nuzair/pen/bmPrJV>
+- <https://codepen.io/alexsafayan/pen/PoMqVy>
