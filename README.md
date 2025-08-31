@@ -1,74 +1,104 @@
-# React + TypeScript + Vite
+# Halloween Trick-or-Treater Counter 🎃
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A spooky, interactive single-page application designed to count trick-or-treaters on Halloween night. Project onto your garage door via HDMI projector for a fun, animated display that tracks visitors and candy inventory with zombie-themed animations!
 
-Currently, two official plugins are available:
+## Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Installation
 
-## Expanding the ESLint configuration
+```bash
+git clone https://github.com/yourusername/halloween-counter.git
+cd halloween-counter
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+npm install
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Production Build
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+npm run build
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Preview production build
+npm run preview
 ```
 
-## Ideas
+## Usage
 
-- <https://codepen.io/nuzair/pen/bmPrJV>
-- <https://codepen.io/alexsafayan/pen/PoMqVy>
+### Basic Operation
+
+1. **Start the app**: Navigate to `http://localhost:5173` (or your configured port)
+2. **Count visitors**
+3. **View fullscreen**: Press `Ctrl+F` to toggle fullscreen mode
+4. **Reset counter**: Press `Ctrl+R` to reset (confirmation required)
+
+### URL Parameters
+
+Configure initial values via URL query parameters:
+
+```
+http://localhost:5173?currentCount=25&initialCandyCount=200
+```
+
+- `currentCount`: Set starting visitor count (default: 0)
+- `initialCandyCount`: Set initial candy pieces (default: 100)
+
+### Projector Setup
+
+1. Connect your computer to the projector via HDMI
+2. Open the app in a modern browser (Chrome, Firefox, or Edge recommended)
+3. Press `Ctrl+F` for fullscreen mode
+4. Adjust projector focus and positioning
+
+## Project Structure
+
+```
+halloween-counter/
+├── src/
+│   ├── components/
+│   │   ├── Counter.tsx         # Main counter display
+│   │   ├── CandyProgress.tsx   # Candy inventory bar
+│   │   ├── StatsDisplay.tsx    # Statistics dashboard
+│   │   └── ZombieHorde.tsx     # Rive zombie animations
+│   ├── hooks/
+│   │   ├── useCounter.ts       # Counter logic & persistence
+│   │   ├── useQueryParams.ts   # URL parameter handling
+│   │   └── useStats.ts         # Statistics calculations
+│   ├── types/
+│   │   └── index.ts            # TypeScript definitions
+│   ├── App.tsx                 # Main application
+│   └── main.tsx                # Entry point
+├── public/
+│   └── rive/
+│       └── zombie.riv          # Zombie animation file
+└── package.json
+```
+
+## Development
+
+### Available Scripts
+
+```bash
+npm run dev      # Start development server with hot reload
+npm run build    # Build for production
+npm run preview  # Preview production build locally
+npm run lint     # Run ESLint checks
+```
+
+## Future Enhancements
+
+The architecture supports these planned features:
+
+- [ ] Bluetooth camera trigger integration
+
+## Tips for Halloween Night
+
+1. **Test before dark**: Set up and test your projector while there's still daylight
+2. **Use URL parameters**: Bookmark your URL with initial counts for easy recovery
+3. **Monitor candy levels**: Watch the progress bar to pace distribution
+5. **Have backup plan**: Keep the URL with current count handy in case of refresh
+
+## Credits
+
+- Zombie animations from [Rive Community](https://rive.app/community/files/205-385-zombie-character/)

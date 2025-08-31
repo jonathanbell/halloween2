@@ -10,7 +10,7 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({ stats }) => {
   return (
     <div className="stats-container">
       <h3 className="stats-title">📊 Spooky Stats 📊</h3>
-      
+
       <div className="stat-item">
         <span className="stat-icon">👻</span>
         <span className="stat-label">Per Hour:</span>

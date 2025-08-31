@@ -16,8 +16,7 @@ export const ZombieHorde: React.FC<ZombieHordeProps> = ({ triggerAnimation, curr
     // Sync zombies with current count + 1
     setZombies(prev => {
       const newZombies: ZombieInstance[] = [];
-      const targetCount = currentCount + 1; // Always have one more zombie than the count
-
+      const targetCount = currentCount;
       for (let i = 0; i < targetCount; i++) {
         const existingZombie = prev.find(z => z.id === `zombie-${i}`);
 
@@ -112,7 +111,7 @@ const ZombieWalker: React.FC<ZombieWalkerProps> = ({ zombie, isOutOfCandy }) => 
       setTimeout(() => {
         const inputs = rive.stateMachineInputs('State Machine 1');
         const inInput = inputs?.find(input => input.name === 'In');
-        
+
         if (inInput && 'fire' in inInput) {
           // Fire the "In" trigger after zombie is positioned
           inInput.fire();
@@ -128,7 +127,7 @@ const ZombieWalker: React.FC<ZombieWalkerProps> = ({ zombie, isOutOfCandy }) => 
       setTimeout(() => {
         const inputs = rive.stateMachineInputs('State Machine 1');
         const hitInput = inputs?.find(input => input.name === 'Hit');
-        
+
         if (hitInput && 'fire' in hitInput) {
           // Fire the "Hit" trigger when candy runs out
           hitInput.fire();
