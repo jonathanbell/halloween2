@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Counter } from './components/Counter';
 import { CandyProgress } from './components/CandyProgress';
 import { StatsDisplay } from './components/StatsDisplay';
@@ -21,13 +21,15 @@ function App() {
     counter.initialCandyCount
   );
 
-  // Keyboard shortcuts for testing
+  // Unified keyboard shortcuts handler
   useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl+R: Reset counter
       if (e.key === 'r' && e.ctrlKey) {
         e.preventDefault();
         counter.reset();
       }
+      // Ctrl+F: Toggle fullscreen
       if (e.key === 'f' && e.ctrlKey) {
         e.preventDefault();
         if (!document.fullscreenElement) {
@@ -38,8 +40,21 @@ function App() {
       }
     };
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Space: Increment counter
+      if (e.code === 'Space') {
+        e.preventDefault();
+        counter.increment();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keypress', handleKeyPress);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keypress', handleKeyPress);
+    };
   }, [counter]);
 
   return (

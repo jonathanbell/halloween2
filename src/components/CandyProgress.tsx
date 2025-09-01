@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import './CandyProgress.css';
 
 interface CandyProgressProps {
@@ -6,7 +6,9 @@ interface CandyProgressProps {
   initialCandyCount: number;
 }
 
-export const CandyProgress: React.FC<CandyProgressProps> = ({ candyRemaining, initialCandyCount }) => {
+const candyIcons = ['🍬', '🍭', '🍫'];
+
+export const CandyProgress: React.FC<CandyProgressProps> = React.memo(({ candyRemaining, initialCandyCount }) => {
   const percentage = (candyRemaining / initialCandyCount) * 100;
   const isCritical = percentage < 10;
   const isEmpty = candyRemaining === 0;
@@ -14,6 +16,15 @@ export const CandyProgress: React.FC<CandyProgressProps> = ({ candyRemaining, in
   let colorClass = 'green';
   if (percentage <= 20) colorClass = 'red';
   else if (percentage <= 50) colorClass = 'yellow';
+
+  const candyIconElements = useMemo(() => 
+    Array.from({ length: 10 }).map((_, i) => ({
+      key: i,
+      icon: candyIcons[i % 3],
+      isDepleted: i * 10 >= percentage
+    })),
+    [percentage]
+  );
 
   return (
     <div className="candy-progress-container">
@@ -38,15 +49,15 @@ export const CandyProgress: React.FC<CandyProgressProps> = ({ candyRemaining, in
       </div>
 
       <div className="candy-icons">
-        {Array.from({ length: 10 }).map((_, i) => (
+        {candyIconElements.map(({ key, icon, isDepleted }) => (
           <span
-            key={i}
-            className={`candy-icon ${i * 10 >= percentage ? 'depleted' : ''}`}
+            key={key}
+            className={`candy-icon ${isDepleted ? 'depleted' : ''}`}
           >
-            {i % 3 === 0 ? '🍬' : i % 3 === 1 ? '🍭' : '🍫'}
+            {icon}
           </span>
         ))}
       </div>
     </div>
   );
-};
+});

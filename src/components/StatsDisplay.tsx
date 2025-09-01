@@ -6,7 +6,7 @@ interface StatsDisplayProps {
   stats: StatsData;
 }
 
-export const StatsDisplay: React.FC<StatsDisplayProps> = ({ stats }) => {
+export const StatsDisplay: React.FC<StatsDisplayProps> = React.memo(({ stats }) => {
   return (
     <div className="stats-container">
       <h3 className="stats-title">📊 Spooky Stats 📊</h3>
@@ -38,4 +38,4 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = ({ stats }) => {
       </div>
     </div>
   );
-};
+});

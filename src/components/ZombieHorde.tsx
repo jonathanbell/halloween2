@@ -9,7 +9,7 @@ interface ZombieHordeProps {
   candyRemaining?: number;
 }
 
-export const ZombieHorde: React.FC<ZombieHordeProps> = ({ triggerAnimation, currentCount, candyRemaining = 100 }) => {
+export const ZombieHorde: React.FC<ZombieHordeProps> = ({ currentCount, candyRemaining = 100 }) => {
   const [zombies, setZombies] = useState<ZombieInstance[]>([]);
 
   useEffect(() => {
@@ -97,7 +97,7 @@ interface ZombieWalkerProps {
   isOutOfCandy: boolean;
 }
 
-const ZombieWalker: React.FC<ZombieWalkerProps> = ({ zombie, isOutOfCandy }) => {
+const ZombieWalker: React.FC<ZombieWalkerProps> = React.memo(({ zombie, isOutOfCandy }) => {
   const { RiveComponent, rive } = useRive({
     src: '/rive/zombie.riv',
     stateMachines: 'State Machine 1',
@@ -108,7 +108,7 @@ const ZombieWalker: React.FC<ZombieWalkerProps> = ({ zombie, isOutOfCandy }) => 
   useEffect(() => {
     if (rive) {
       // Small delay to ensure zombie is rendered and visible first
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         const inputs = rive.stateMachineInputs('State Machine 1');
         const inInput = inputs?.find(input => input.name === 'In');
 
@@ -117,6 +117,8 @@ const ZombieWalker: React.FC<ZombieWalkerProps> = ({ zombie, isOutOfCandy }) => 
           inInput.fire();
         }
       }, 100);
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [rive]);
 
@@ -124,7 +126,7 @@ const ZombieWalker: React.FC<ZombieWalkerProps> = ({ zombie, isOutOfCandy }) => 
   useEffect(() => {
     if (rive && isOutOfCandy) {
       // Small delay to ensure Rive is fully loaded
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         const inputs = rive.stateMachineInputs('State Machine 1');
         const hitInput = inputs?.find(input => input.name === 'Hit');
 
@@ -133,11 +135,17 @@ const ZombieWalker: React.FC<ZombieWalkerProps> = ({ zombie, isOutOfCandy }) => 
           hitInput.fire();
         }
       }, 200);
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [rive, isOutOfCandy]);
 
-  // Hide zombie when it goes off-screen (but keep visible area wider for smoother entry)
-  const isVisible = zombie.position > -5 && zombie.position < 105;
+  // Only render zombies that are visible on screen
+  const isVisible = zombie.position > -10 && zombie.position < 110;
+
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <div
@@ -145,10 +153,13 @@ const ZombieWalker: React.FC<ZombieWalkerProps> = ({ zombie, isOutOfCandy }) => 
       style={{
         transform: `translateX(${zombie.position}vw) translateY(${zombie.yOffset}vh) scale(${zombie.scale})`,
         zIndex: Math.floor(zombie.scale * 10),
-        display: isVisible ? 'block' : 'none',
       }}
     >
       <RiveComponent />
     </div>
   );
-};
+}, (prevProps, nextProps) => 
+  prevProps.zombie.id === nextProps.zombie.id &&
+  prevProps.zombie.position === nextProps.zombie.position &&
+  prevProps.isOutOfCandy === nextProps.isOutOfCandy
+);

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { CounterState } from '../types';
 import { updateURLParam } from './useQueryParams';
 
@@ -35,17 +35,6 @@ export const useCounter = ({ initialCount = 0, initialCandyCount = 100 }: UseCou
     setTimeout(() => setIsAnimating(false), 600);
   }, []);
 
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.code === 'Space') {
-        e.preventDefault();
-        increment();
-      }
-    };
-
-    window.addEventListener('keypress', handleKeyPress);
-    return () => window.removeEventListener('keypress', handleKeyPress);
-  }, [increment]);
 
   const reset = useCallback(() => {
     if (window.confirm('Are you sure you want to reset the counter?')) {
