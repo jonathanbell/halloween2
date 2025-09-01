@@ -30,12 +30,6 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = React.memo(({ stats }) 
         <span className="stat-label">Depletion Rate:</span>
         <span className="stat-value">{stats.candyDepletionRate}/hr</span>
       </div>
-
-      <div className="stat-item">
-        <span className="stat-icon">⏰</span>
-        <span className="stat-label">Time Left:</span>
-        <span className="stat-value highlight">{stats.estimatedCandyDepletion}</span>
-      </div>
     </div>
   );
 });

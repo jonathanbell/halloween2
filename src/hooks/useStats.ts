@@ -19,7 +19,6 @@ export const useStats = (currentCount: number, candyRemaining: number, initialCa
     
     let trickOrTreatersPerHour = 0;
     let averageTimeBetween = 0;
-    let estimatedCandyDepletion = 'N/A';
     let candyDepletionRate = 0;
 
     if (elapsedHours > 0) {
@@ -35,27 +34,11 @@ export const useStats = (currentCount: number, candyRemaining: number, initialCa
 
       const candyUsed = initialCandyCount - candyRemaining;
       candyDepletionRate = Math.round((candyUsed / elapsedHours) * 10) / 10;
-      
-      if (candyDepletionRate > 0 && candyRemaining > 0) {
-        const hoursRemaining = candyRemaining / candyDepletionRate;
-        const minutesRemaining = Math.round(hoursRemaining * 60);
-        
-        if (minutesRemaining < 60) {
-          estimatedCandyDepletion = `${minutesRemaining} minutes`;
-        } else {
-          const hours = Math.floor(minutesRemaining / 60);
-          const minutes = minutesRemaining % 60;
-          estimatedCandyDepletion = `${hours}h ${minutes}m`;
-        }
-      } else if (candyRemaining === 0) {
-        estimatedCandyDepletion = 'Out of candy! 🎃';
-      }
     }
 
     return {
       trickOrTreatersPerHour,
       averageTimeBetween,
-      estimatedCandyDepletion,
       candyDepletionRate,
       startTime: startTimeRef.current,
       timestamps,

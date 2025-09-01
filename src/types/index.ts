@@ -8,7 +8,6 @@ export interface CounterState {
 export interface StatsData {
   trickOrTreatersPerHour: number;
   averageTimeBetween: number;
-  estimatedCandyDepletion: string;
   candyDepletionRate: number;
   startTime: number;
   timestamps: number[];
