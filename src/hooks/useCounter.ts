@@ -10,7 +10,7 @@ interface UseCounterProps {
 export const useCounter = ({ initialCount = 0, initialCandyCount = 100 }: UseCounterProps) => {
   const [state, setState] = useState<CounterState>({
     currentCount: initialCount,
-    candyRemaining: initialCandyCount,
+    candyRemaining: initialCandyCount - (initialCount * 1), // Adjust candy remaining based on current count
     initialCandyCount: initialCandyCount,
     candyPerChild: 1,
   });
