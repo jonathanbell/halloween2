@@ -3,6 +3,7 @@ import { Counter } from './components/Counter';
 import { CandyProgress } from './components/CandyProgress';
 import { StatsDisplay } from './components/StatsDisplay';
 import { ZombieHorde } from './components/ZombieHorde';
+import { CandyRain } from './components/CandyRain';
 import { useCounter } from './hooks/useCounter';
 import { useQueryParams } from './hooks/useQueryParams';
 import { useStats } from './hooks/useStats';
@@ -71,6 +72,8 @@ function App() {
         />
         
         <StatsDisplay stats={stats} />
+        
+        <CandyRain triggerCount={counter.currentCount} />
         
         <ZombieHorde 
           triggerAnimation={counter.isAnimating} 

@@ -24,10 +24,10 @@ export const ZombieHorde: React.FC<ZombieHordeProps> = ({ currentCount, candyRem
           // Keep existing zombie with its current position
           newZombies.push(existingZombie);
         } else {
-          // Create new zombie appearing just inside the left edge of screen
+          // Create new zombie appearing from the left side with more variation
           newZombies.push({
             id: `zombie-${i}`,
-            position: 5 + Math.random() * 5, // Start just inside view from left
+            position: -5 + Math.random() * 25, // Start from left side with wider spawn area (-5 to 20)
             speed: 0.06 + Math.random() * 0.03, // Good shambling pace
             scale: 0.8 + Math.random() * 0.4, // Varied sizes
             yOffset: Math.random() * 10 - 5, // Slight vertical variation
