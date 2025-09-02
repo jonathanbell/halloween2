@@ -15,10 +15,10 @@ function App() {
     initialCount: queryParams.currentCount ?? 0,
     initialCandyCount: queryParams.initialCandyCount ?? 100,
   });
-  
+
   const stats = useStats(
-    counter.currentCount, 
-    counter.candyRemaining, 
+    counter.currentCount,
+    counter.candyRemaining,
     counter.initialCandyCount
   );
 
@@ -51,7 +51,7 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keypress', handleKeyPress);
-    
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keypress', handleKeyPress);
@@ -61,30 +61,27 @@ function App() {
   return (
     <div className="app">
       <div className="main-content">
-        <Counter 
-          count={counter.currentCount} 
+        <Counter
+          count={counter.currentCount}
           isAnimating={counter.isAnimating}
         />
-        
-        <CandyProgress 
+
+        <CandyProgress
           candyRemaining={counter.candyRemaining}
           initialCandyCount={counter.initialCandyCount}
         />
-        
+
         <StatsDisplay stats={stats} />
-        
+
         <CandyRain triggerCount={counter.currentCount} />
-        
-        <ZombieHorde 
-          triggerAnimation={counter.isAnimating} 
+
+        <ZombieHorde
+          triggerAnimation={counter.isAnimating}
           currentCount={counter.currentCount}
           candyRemaining={counter.candyRemaining}
         />
       </div>
 
-      <div className="instructions">
-        <span>Press SPACE to increment • Ctrl+R to reset • Ctrl+F for fullscreen</span>
-      </div>
     </div>
   );
 }

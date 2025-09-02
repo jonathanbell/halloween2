@@ -54,7 +54,7 @@ export const ZombieHorde: React.FC<ZombieHordeProps> = ({ currentCount, candyRem
       setZombies(prev => prev.map(zombie => {
         let newPosition = zombie.position + (zombie.speed * deltaTime);
 
-        // Reset zombie when it reaches the candy (right side)
+        // Reset zombie when it reaches the right side
         // Using 105 to reset before going fully off-screen
         if (newPosition > 105) {
           // Reset far enough off-screen to avoid flashing
@@ -84,10 +84,6 @@ export const ZombieHorde: React.FC<ZombieHordeProps> = ({ currentCount, candyRem
         />
       ))}
 
-      {/* Candy target */}
-      <div className="candy-target">
-        <span className="candy-pile">🍬🍭🍫🍬🍭</span>
-      </div>
     </div>
   );
 };
