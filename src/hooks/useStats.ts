@@ -3,7 +3,22 @@ import type { StatsData } from '../types';
 
 export const useStats = (currentCount: number, candyRemaining: number, initialCandyCount: number) => {
   const startTimeRef = useRef(Date.now());
-  const [timestamps, setTimestamps] = useState<number[]>([]);
+  
+  // Initialize timestamps based on initial count (simulating even distribution)
+  const [timestamps, setTimestamps] = useState<number[]>(() => {
+    if (currentCount === 0) return [];
+    
+    // Create simulated timestamps for existing count
+    const now = Date.now();
+    const timePerVisitor = 5 * 60 * 1000; // Assume 5 minutes between visitors
+    const simulated: number[] = [];
+    
+    for (let i = 0; i < currentCount; i++) {
+      simulated.push(now - (currentCount - i) * timePerVisitor);
+    }
+    
+    return simulated;
+  });
 
   // Track when a new visitor arrives
   useEffect(() => {
@@ -16,14 +31,21 @@ export const useStats = (currentCount: number, candyRemaining: number, initialCa
   const stats = useMemo<StatsData>(() => {
     const now = Date.now();
     const elapsedHours = (now - startTimeRef.current) / (1000 * 60 * 60);
+    const oneHourAgo = now - (60 * 60 * 1000);
     
-    let trickOrTreatersPerHour = 0;
+    let candiesGivenPastHour: number | null = null;
     let averageTimeBetween = 0;
     let candyDepletionRate = 0;
 
+    // Calculate candies given in the past hour
+    if (elapsedHours >= 1) {
+      const visitorsInPastHour = timestamps.filter(time => time >= oneHourAgo).length;
+      // Assuming 1 candy per visitor for simplicity
+      // Could be multiplied by candyPerChild if we track that
+      candiesGivenPastHour = visitorsInPastHour;
+    }
+    
     if (elapsedHours > 0) {
-      trickOrTreatersPerHour = Math.round((currentCount / elapsedHours) * 10) / 10;
-      
       if (timestamps.length > 1) {
         const totalTime = timestamps.reduce((acc, time, i) => {
           if (i === 0) return acc;
@@ -37,7 +59,7 @@ export const useStats = (currentCount: number, candyRemaining: number, initialCa
     }
 
     return {
-      trickOrTreatersPerHour,
+      candiesGivenPastHour,
       averageTimeBetween,
       candyDepletionRate,
       startTime: startTimeRef.current,

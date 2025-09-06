@@ -6,7 +6,7 @@ export interface CounterState {
 }
 
 export interface StatsData {
-  trickOrTreatersPerHour: number;
+  candiesGivenPastHour: number | null;
   averageTimeBetween: number;
   candyDepletionRate: number;
   startTime: number;

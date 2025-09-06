@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   gap: 4vw;
-  margin: 2vh auto;
+  margin: 0 auto;
   padding: 1vh 2vw;
   background: rgba(26, 26, 26, 0.8);
   border-radius: 1vh;
@@ -33,7 +33,7 @@
 .stat-value {
   font-weight: bold;
   color: #ffd700;
-  text-shadow: 
+  text-shadow:
     1px 1px 0px #000,
     0 0 5px rgba(255, 215, 0, 0.3);
   font-family: 'Digital-7', monospace;
@@ -60,15 +60,15 @@
     gap: 2vw;
     font-size: 1.8vh;
   }
-  
+
   .stat-item {
     font-size: 1.8vh;
   }
-  
+
   .stat-icon {
     font-size: 2vh;
   }
-  
+
   .stat-value {
     font-size: 2vh;
   }
