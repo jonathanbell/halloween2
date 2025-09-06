@@ -1,8 +1,4 @@
-@font-face {
-  font-family: 'Digital-7';
-  src: url('/digital-7.woff') format('woff');
-  font-display: swap;
-}
+/* Digital-7 font removed - using monospace fallback */
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

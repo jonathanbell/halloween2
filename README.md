@@ -1,53 +1,84 @@
 # Halloween Trick-or-Treater Counter 🎃
 
-A spooky, interactive single-page application designed to count trick-or-treaters on Halloween night. Project onto your garage door via HDMI projector for a fun, animated display that tracks visitors and candy inventory with zombie-themed animations!
+A spooky, interactive counter application with real-time remote control capabilities. Project onto your garage door via an HDMI capable projector for a fun, animated display that tracks visitors and candy inventory with zombie-themed animations. Control the counter from any mobile device on your network!
 
 ## Quick Start
 
 ### Installation
 
 ```bash
-git clone https://github.com/yourusername/halloween-counter.git
+git clone https://github.com/jonathanbell/halloween-counter.git
 cd halloween-counter
 
 npm install
-
-npm run dev
 ```
 
-### Production Build
+### Running the Application
 
 ```bash
-npm run build
+# Production mode (recommended)
+npm run start     # Builds and starts the SSE server on port 3000
 
-# Preview production build
-npm run preview
+# Development mode
+npm run dev       # Vite dev server (no SSE features)
+npm run dev:all   # Build and run SSE server for development
 ```
+
+### Access Points
+
+- **Main Display**: `http://localhost:3000` (connect to projector)
+- **Remote Control**: `http://localhost:3000/remote` (mobile devices)
+- **Settings**: `http://localhost:3000/settings` (configure candy and trick-o-treater counts)
+
+## Features
+
+- 🎃 **Real-time Synchronization**: All devices stay in sync via Server-Sent Events (SSE)
+- 📱 **Mobile Remote Control**: Increment counter from any phone on your network
+- 🧟 **Animated Zombies**: Rive-powered animations that react to visitor count
+- 📊 **Live Statistics**: Track visitors per hour, average time between visits
+- 🍬 **Candy Tracking**: Monitor remaining candy with visual progress bar
+- 🖥️ **Projector Ready**: Full-screen mode optimized for garage door projection
 
 ## Usage
 
 ### Basic Operation
 
-1. **Start the app**: Navigate to `http://localhost:5173` (or your configured port)
-2. **Count visitors**
-3. **View fullscreen**: Press `Ctrl+F` to toggle fullscreen mode
-4. **Reset counter**: Press `Ctrl+R` to reset (confirmation required)
+1. **Start the server**: Run `npm run start`
+2. **Open main display**: Navigate to `http://localhost:3000`
+3. **Connect mobile devices**: Share your IP address for remote access
+4. **View fullscreen**: Press `Ctrl+F` on the main display
+5. **Count visitors**: Press spacebar or use mobile remote
 
-### URL Parameters
+### Network Setup
 
-Configure initial values via URL query parameters:
+1. **Find your IP address**:
 
-```
-http://localhost:5173?currentCount=25&initialCandyCount=200
-```
+   ```bash
+   # macOS/Linux
+   ifconfig | grep "inet "
 
-- `currentCount`: Set starting visitor count (default: 0)
-- `initialCandyCount`: Set initial candy pieces (default: 100)
+   # Windows
+   ipconfig
+   ```
+
+2. **Share with helpers**: Give them `http://<your-ip>:3000/remote`
+
+3. **All devices must be on same network** (same WiFi)
+
+### Configuration
+
+Access the settings page at `http://localhost:3000/settings` to:
+
+- Set current visitor count
+- Update initial candy amount
+- Reset counter for new session
 
 ### Projector Setup
 
-1. Connect your computer to the projector via HDMI
-2. Open the app in a modern browser (Chrome, Firefox, or Edge recommended)
+Best to setup positioning and sizing/zoom before Halloween night.
+
+1. Connect computer to projector via HDMI
+2. Open main display at `http://localhost:3000`
 3. Press `Ctrl+F` for fullscreen mode
 4. Adjust projector focus and positioning
 
@@ -55,6 +86,7 @@ http://localhost:5173?currentCount=25&initialCandyCount=200
 
 ```
 halloween-counter/
+├── server.js                    # SSE server (Node.js, no dependencies)
 ├── src/
 │   ├── components/
 │   │   ├── Counter.tsx         # Main counter display
@@ -62,7 +94,8 @@ halloween-counter/
 │   │   ├── StatsDisplay.tsx    # Statistics dashboard
 │   │   └── ZombieHorde.tsx     # Rive zombie animations
 │   ├── hooks/
-│   │   ├── useCounter.ts       # Counter logic & persistence
+│   │   ├── useCounter.ts       # Server-synced counter logic
+│   │   ├── useSSE.ts           # SSE connection management
 │   │   ├── useQueryParams.ts   # URL parameter handling
 │   │   └── useStats.ts         # Statistics calculations
 │   ├── types/
@@ -70,8 +103,11 @@ halloween-counter/
 │   ├── App.tsx                 # Main application
 │   └── main.tsx                # Entry point
 ├── public/
+│   ├── remote.html             # Mobile remote control
+│   ├── settings.html           # Configuration page
 │   └── rive/
 │       └── zombie.riv          # Zombie animation file
+├── dist/                       # Built React app (after npm run build)
 └── package.json
 ```
 
@@ -80,25 +116,45 @@ halloween-counter/
 ### Available Scripts
 
 ```bash
-npm run dev      # Start development server with hot reload
-npm run build    # Build for production
-npm run preview  # Preview production build locally
-npm run lint     # Run ESLint checks
+npm run dev         # Vite dev server (React only, no SSE)
+npm run dev:server  # SSE server only
+npm run dev:all     # Build and run SSE server
+npm run build       # Build React app for production
+npm run server      # Run SSE server (requires dist/)
+npm run start       # Build and start everything
+npm run lint        # Run ESLint checks
+npm run preview     # Preview production build
 ```
 
-## Future Enhancements
+## Technical Architecture
 
-The architecture supports these planned features:
+### Server-Sent Events (SSE)
 
-- [ ] Bluetooth camera trigger integration
+The app uses a lightweight Node.js server with zero external dependencies:
+
+- Real-time state synchronization across all devices
+- Automatic reconnection with exponential backoff
+- In-memory state management
+- CORS enabled for local network access
+
+### Key Endpoints
+
+- `GET /events` - SSE stream for real-time updates
+- `POST /increment` - Increment the counter
+- `POST /settings` - Update configuration
+- `GET /state` - Get current state
 
 ## Tips for Halloween Night
 
-1. **Test before dark**: Set up and test your projector while there's still daylight
-2. **Use URL parameters**: Bookmark your URL with initial counts for easy recovery
+1. **Test before dark**: Set up projector and test network connectivity in daylight
+2. **Share remote URL**: Give helpers `http://<your-ip>:3000/remote` on their phones
 3. **Monitor candy levels**: Watch the progress bar to pace distribution
-5. **Have backup plan**: Keep the URL with current count handy in case of refresh
+4. **Use settings page**: Adjust counts at `http://localhost:3000/settings` if needed
+5. **Network tips**:
+   - Ensure all devices are on same WiFi
+   - Keep server running on main display computer
+   - Mobile devices will auto-reconnect if connection drops
 
 ## Credits
 
-- Zombie animations from [Rive Community](https://rive.app/community/files/205-385-zombie-character/)
+- Zombie animations from the [Rive Community](https://rive.app/community/files/205-385-zombie-character/)

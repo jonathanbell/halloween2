@@ -4,22 +4,28 @@ import { CandyProgress } from './components/CandyProgress';
 import { StatsDisplay } from './components/StatsDisplay';
 import { ZombieHorde } from './components/ZombieHorde';
 import { useCounter } from './hooks/useCounter';
-import { useQueryParams } from './hooks/useQueryParams';
 import { useStats } from './hooks/useStats';
 import './App.css';
 
 function App() {
-  const queryParams = useQueryParams();
-  const counter = useCounter({
-    initialCount: queryParams.currentCount ?? 0,
-    initialCandyCount: queryParams.initialCandyCount ?? 100,
-  });
+  const counter = useCounter();
 
   const stats = useStats(
     counter.currentCount,
     counter.candyRemaining,
     counter.initialCandyCount
   );
+  
+  // Log connection status to console
+  useEffect(() => {
+    if (counter.isConnected) {
+      console.log('✅ Connected to counter server');
+    } else if (counter.connectionError) {
+      console.log('❌ Server connection error:', counter.connectionError);
+    } else {
+      console.log('⏳ Connecting to server...');
+    }
+  }, [counter.isConnected, counter.connectionError]);
 
   // Unified keyboard shortcuts handler
   useEffect(() => {

@@ -7,7 +7,7 @@ export interface CounterState {
 
 export interface StatsData {
   candiesGivenPastHour: number | null;
-  averageTimeBetween: number;
+  averageTimeBetween: number; // in seconds
   candyDepletionRate: number;
   startTime: number;
   timestamps: number[];

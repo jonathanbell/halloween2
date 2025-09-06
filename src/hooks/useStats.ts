@@ -51,11 +51,12 @@ export const useStats = (currentCount: number, candyRemaining: number, initialCa
           if (i === 0) return acc;
           return acc + (time - timestamps[i - 1]);
         }, 0);
-        averageTimeBetween = Math.round(totalTime / (timestamps.length - 1) / 1000 / 60 * 10) / 10;
+        // Calculate average time in seconds
+        averageTimeBetween = Math.round(totalTime / (timestamps.length - 1) / 1000);
       }
 
       const candyUsed = initialCandyCount - candyRemaining;
-      candyDepletionRate = Math.round((candyUsed / elapsedHours) * 10) / 10;
+      candyDepletionRate = Math.floor(candyUsed / elapsedHours);
     }
 
     return {

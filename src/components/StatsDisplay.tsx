@@ -7,12 +7,27 @@ interface StatsDisplayProps {
 }
 
 export const StatsDisplay: React.FC<StatsDisplayProps> = React.memo(({ stats }) => {
+  // Format time in fuzzy increments
+  const formatFuzzyTime = (seconds: number): string => {
+    if (seconds <= 0) return 'N/A';
+    
+    if (seconds < 60) {
+      // Round to nearest 5 seconds
+      const rounded = Math.round(seconds / 5) * 5;
+      return `~${rounded || 5} seconds`;
+    } else {
+      // Convert to minutes
+      const minutes = Math.round(seconds / 60);
+      return minutes === 1 ? '~1 min' : `~${minutes} mins`;
+    }
+  };
+  
   return (
     <div className="stats-container">
       <div className="stat-item">
         <span className="stat-icon">👻</span>
         {/* <span className="stat-icon">🧟‍♂️</span> */}
-        <span className="stat-label">Candies Given (Past Hour):</span>
+        <span className="stat-label">Candy Output (past hour):</span>
         <span className="stat-value">{stats.candiesGivenPastHour !== null ? stats.candiesGivenPastHour : 'N/A'}</span>
       </div>
 
@@ -20,7 +35,7 @@ export const StatsDisplay: React.FC<StatsDisplayProps> = React.memo(({ stats }) 
         <span className="stat-icon">⏱️</span>
         <span className="stat-label">Average Wait:</span>
         <span className="stat-value">
-          {stats.averageTimeBetween > 0 ? `${stats.averageTimeBetween} min` : 'N/A'}
+          {formatFuzzyTime(stats.averageTimeBetween)}
         </span>
       </div>
 
